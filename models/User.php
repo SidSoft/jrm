@@ -92,13 +92,15 @@ class User {
 
 		$sql = "SELECT * FROM `user` WHERE email = :email AND password = :password";
 
-		$result = $db->prepare($sql);
+		$statement = $db->prepare($sql);
 		$password = md5($password);
-		$result->bindParam(':email', $email, \PDO::PARAM_STR);
-		$result->bindParam(':password', $password, \PDO::PARAM_STR);
-		$result->execute();
+		$statement->bindParam(':email', $email, \PDO::PARAM_STR);
+		$statement->bindParam(':password', $password, \PDO::PARAM_STR);
 
-		$user = $result->fetch();
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$statement->execute();
+
+		$user = $statement->fetch();
 		if ($user) {
 			return $user['id'];
 		}
@@ -140,13 +142,13 @@ class User {
 			$db = Db::getConnection();
 			$sql = "SELECT * FROM `user` WHERE `id` = :id";
 
-			$result = $db->prepare($sql);
-			$result->bindParam(':id', $id, \PDO::PARAM_STR);
+			$statement = $db->prepare($sql);
+			$statement->bindParam(':id', $id, \PDO::PARAM_STR);
 
-			$result->setFetchMode(\PDO::FETCH_ASSOC);
-			$result->execute();
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$statement->execute();
 
-			return $result->fetch();
+			return $statement->fetch();
 		}
 
 	}
@@ -182,7 +184,34 @@ class User {
 		$statement->bindParam(':confirmation', $confirmation, \PDO::PARAM_STR);
 		$statement->bindParam(':id', $userId, \PDO::PARAM_STR);
 
-		return $statement->execute();
+		$statement->execute();
+
+		return $confirmation;
+	}
+
+	public static function confirmEmail(string $confirmation) {
+
+		$db = Db::getConnection();
+
+		$sql = "SELECT * FROM `user` WHERE `confirmation` = :confirmation";
+
+		$statement = $db->prepare($sql);
+		$statement->bindParam(':confirmation', $confirmation, \PDO::PARAM_STR);
+
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$statement->execute();
+
+		$user = $statement->fetch();
+		if ($user) {
+			$sql = "UPDATE `user` SET `confirmation` = 'confirmed' WHERE `id` = :id";
+
+			$statement = $db->prepare($sql);
+			$statement->bindParam(':id', $user['id'], \PDO::PARAM_STR);
+
+			$statement->execute();
+
+			self::auth($user['id']);
+		}
 
 	}
 }
