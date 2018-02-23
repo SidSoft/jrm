@@ -6,19 +6,64 @@ use components\Db;
 
 class User {
 
-	public static function edit($id, $name, $password) {
+	/*
+	 * Edit user details
+	 */
+	public static function edit(int $userId, string $first_name, string $last_name): bool {
+
 		$db = Db::getConnection();
 
-		$sql = "UPDATE `user` SET (`name` = :name, `password` = :password) WHERE `id` = :id";
+		$sql = "UPDATE `user` SET `first_name` = :first_name, `last_name` = :last_name WHERE `id` = :id";
+
 		$result = $db->prepare($sql);
-		$result->bindParam(':name', $name, \PDO::PARAM_STR);
-		$result->bindParam(':password', $password, \PDO::PARAM_STR);
-		$result->bindParam(':id', $id, \PDO::PARAM_STR);
+		$result->bindParam(':first_name', $first_name, \PDO::PARAM_STR);
+		$result->bindParam(':last_name', $last_name, \PDO::PARAM_STR);
+		$result->bindParam(':id', $userId, \PDO::PARAM_STR);
 
 		return $result->execute();
 	}
 
+	/*
+	 * Change User password
+	 */
+	public static function passwordChange (int $userId, string $password): bool {
+
+		$db = Db::getConnection();
+
+		$sql = "UPDATE `user` SET `password` = :password WHERE `id` = :id";
+
+		$password = md5($password);
+		$result = $db->prepare($sql);
+		$result->bindParam(':password', $password, \PDO::PARAM_STR);
+		$result->bindParam(':id', $userId, \PDO::PARAM_STR);
+
+		return $result->execute();
+	}
+
+	/*
+	 * Check if password corresponds UserID
+	 */
+	public static function passwordCheck(int $userId, string $password): bool {
+
+		$db = Db::getConnection();
+
+		$sql = "SELECT COUNT(*) FROM `user` WHERE `id` = :id AND `password` = :password";
+
+		$password = md5($password);
+		$statement = $db->prepare($sql);
+		$statement->bindParam(':id', $userId, \PDO::PARAM_STR);
+		$statement->bindParam(':password', $password, \PDO::PARAM_STR);
+		$statement->execute();
+		if ($statement->fetchColumn()) return true;
+		return false;
+	}
+
+	/*
+	 * User registration
+	 * Returns ID of registered user
+	 */
 	public static function register(string $first_name, string $last_name, string $email, string $password, int $role = 0): int {
+
 		$db = Db::getConnection();
 
 		$sql = "INSERT INTO `user` (`first_name`, `last_name`, `email`, `password`, `role`, `confirmation`) 
@@ -42,6 +87,10 @@ class User {
 		return $last_id;
 	}
 
+	/*
+	 * Name field validation
+	 * Returns current error if any
+	 */
 	public static function checkName(string $name): string {
 
 		 if (!$name) $error = "This field is required";
@@ -50,6 +99,11 @@ class User {
 		 return $error;
 	}
 
+	/*
+	 * Email field validation
+	 * Check email uniqueness
+	 * Returns current error if any
+	 */
 	public static function checkEmail(string $email): string {
 
 		if (!$email) $error = "This field is required";
@@ -59,6 +113,10 @@ class User {
 		return $error;
 	}
 
+	/*
+	 * Password field validation
+	 * Returns current error if any
+	 */
 	public static function checkPassword(string $password): string {
 
 		if (!$password) $error = "This field is required";
@@ -67,25 +125,37 @@ class User {
 		return $error;
 	}
 
-	public static function checkPasswordConfirmation(string $password, string $password_confirmation) {
+	/*
+	 * Check if confirmation password matches main password
+	 * Returns current error if any
+	 */
+	public static function checkPasswordConfirmation(string $password, string $password_confirmation): string {
 
-		if ($password != $password_confirmation) $error = "Password does not match the confirm password";
+		if ($password != $password_confirmation) $error = "Password does't match the confirmation password";
 		else $error = "";
 		return $error;
 	}
 
+	/*
+	 * Check if entered email already used for registration
+	 * Returns TRUE if entered email already exists
+	 */
 	public static function checkEmailExists(string $email): bool {
 
 		$db = Db::getConnection();
 
 		$sql = "SELECT COUNT(*) FROM `user` WHERE `email` = :email";
 		$statement = $db->prepare($sql);
-		$statement->bindParam('email',$email, \PDO::PARAM_STR);
+		$statement->bindParam(':email',$email, \PDO::PARAM_STR);
 		$statement->execute();
 		if ($statement->fetchColumn()) return true;
 		return false;
 	}
 
+	/*
+	 * Check if user with entered email and password exists
+	 * Returns UserID or FALSE
+	 */
 	public static function checkUserData(string $email, string $password) {
 
 		$db = Db::getConnection();
@@ -107,11 +177,17 @@ class User {
 		return false;
 	}
 
+	/*
+	 * Authentication
+	 */
 	public static function auth(int $userId) {
 
 		$_SESSION['user'] = $userId;
 	}
 
+	/*
+	 * Logout
+	 */
 	public static function logout() {
 
 		unset($_SESSION['user']);
@@ -119,14 +195,10 @@ class User {
 		header("Location: /");
 	}
 
-	public static function isGuest() {
-
-		if (isset($_SESSION['user'])) {
-			return false;
-		}
-		return true;
-	}
-
+	/*
+	 * Check if user is logged
+	 * Returns UserID or redirect on login page
+	 */
 	public static function checkLogged(): int {
 
 		if (isset($_SESSION['user'])) {
@@ -136,14 +208,17 @@ class User {
 		header("Location: /user/login");
 	}
 
-	public static function getUserById($id) {
+	/*
+	 * Returns User data
+	 */
+	public static function getUserById(int $userId): iterable {
 
-		if ($id) {
+		if ($userId) {
 			$db = Db::getConnection();
 			$sql = "SELECT * FROM `user` WHERE `id` = :id";
 
 			$statement = $db->prepare($sql);
-			$statement->bindParam(':id', $id, \PDO::PARAM_STR);
+			$statement->bindParam(':id', $userId, \PDO::PARAM_STR);
 
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$statement->execute();
@@ -153,6 +228,9 @@ class User {
 
 	}
 
+	/*
+	 * Returns User name string
+	 */
 	public static function getUserName(int $id): string {
 
 		$user = self::getUserById($id);
@@ -160,6 +238,9 @@ class User {
 
 	}
 
+	/*
+	 * Send email
+	 */
 	public static function sendEmail(int $userId, string $subject, string $body, string $type = "html"): bool {
 
 		$user = self::getUserById($userId);
@@ -172,6 +253,9 @@ class User {
 		return mail($to, $subject, $body, $headers);
 	}
 
+	/*
+	 * Generates new Confirmation code and stores it in DB
+	 */
 	public static function generateConfirmationCode(int $userId): string {
 
 		$confirmation = bin2hex(random_bytes(16));
@@ -189,6 +273,9 @@ class User {
 		return $confirmation;
 	}
 
+	/*
+	 * Registered user's email confirmation.
+	 */
 	public static function confirmEmail(string $confirmation) {
 
 		$db = Db::getConnection();
@@ -212,6 +299,6 @@ class User {
 
 			self::auth($user['id']);
 		}
-
+		header("Location: /account");
 	}
 }

@@ -12,7 +12,10 @@ use models\User;
 
 class UserController {
 
-	public function actionRegister() {
+	/*
+	 * Manages registration page
+	 */
+	public function actionRegister(): bool {
 
 		$first_name = "";
 		$last_name = "";
@@ -53,7 +56,10 @@ class UserController {
 		return true;
 	}
 
-	public static function actionLogin() {
+	/*
+	 * Manages login procedure
+	 */
+	public static function actionLogin():bool {
 
 		$email = "";
 		$password = "";
@@ -78,15 +84,12 @@ class UserController {
 		return true;
 	}
 
+	/*
+	 * Manages logout procedure
+	 */
 	public static function actionLogout() {
 
 		User::logout();
-
 	}
-
-	public function actionCreate() {
-		echo bin2hex(random_bytes(4));
-	}
-
 
 }

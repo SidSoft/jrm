@@ -4,6 +4,9 @@ namespace components;
 
 class Db {
 
+	/*
+	 * DB initializations
+	 */
 	public static function getConnection(): object {
 		$paramsPath = ROOT . '/config/db_params.php';
 		$params = include($paramsPath);

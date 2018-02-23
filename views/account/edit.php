@@ -1,41 +1,44 @@
-<?php include ROOT . '/views/layouts/header.php'; ?>
+<?php include ROOT . '/views/layout/header.php'; ?>
+    <section class="masthead text-center text-white">
+        <div class="masthead-content">
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Edit user details</small></h3>
+                            </div>
+                            <div class="panel-body">
+                                <form role="form" action="#" method="post">
+                                    <div class="form-group">
+                                        <input type="text" pattern=".{2,}" required title="2 characters minimum" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name" value="<?= $first_name; ?>">
+	                                    <?php if (isset($errors['first_name']) && $errors['first_name']): ?>
+                                            <span class="error"><?= $errors['first_name']; ?></span>
+	                                    <?php endif; ?>
+                                    </div>
 
-	<section>
-		<div class="container">
-			<div class="row">
+                                    <div class="form-group">
+                                        <input type="text" pattern=".{2,}" required title="2 characters minimum" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name" value="<?= $last_name; ?>">
+	                                    <?php if (isset($errors['last_name']) && $errors['last_name']): ?>
+                                            <span class="error"><?= $errors['last_name']; ?></span>
+	                                    <?php endif; ?>
+                                    </div>
 
-				<div class="col-sm-4 col-sm-offset-4 padding-right">
+                                    <input type="submit" name="submit" value="Edit" class="btn btn-info btn-block">
+                                    <?php if ($result): ?>
+                                    <h3 class="panel-title">Data was changed</small></h3>
+                                    <?php endif; ?>
 
-					<?php if ($result): ?>
-						<p>Данные отредактированы!</p>
-					<?php else: ?>
-						<?php if (isset($errors) && is_array($errors)): ?>
-							<ul>
-								<?php foreach ($errors as $error): ?>
-									<li> - <?php echo $error; ?></li>
-								<?php endforeach; ?>
-							</ul>
-						<?php endif; ?>
-
-						<div class="signup-form"><!--sign up form-->
-							<h2>Редактирование данных</h2>
-							<form action="#" method="post">
-								<p>Имя:</p>
-								<input type="text" name="name" placeholder="Имя" value="<?php echo $name; ?>"/>
-
-								<p>Пароль:</p>
-								<input type="password" name="password" placeholder="Пароль" value="<?php echo $password; ?>"/>
-								<br/>
-								<input type="submit" name="submit" class="btn btn-default" value="Сохранить" />
-							</form>
-						</div><!--/sign up form-->
-
-					<?php endif; ?>
-					<br/>
-					<br/>
-				</div>
-			</div>
-		</div>
-	</section>
-
-<?php include ROOT . '/views/layouts/footer.php'; ?>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-circle-1 bg-circle"></div>
+        <div class="bg-circle-2 bg-circle"></div>
+        <div class="bg-circle-3 bg-circle"></div>
+        <div class="bg-circle-4 bg-circle"></div>
+    </section>
+<?php include ROOT . '/views/layout/footer.php'; ?>

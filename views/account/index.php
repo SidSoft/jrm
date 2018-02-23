@@ -23,8 +23,8 @@
 	    <?php else: ?>
         <div class="container">
             <h1 class="masthead-heading mb-0">Hello, <?= $userName; ?>!</h1>
-            <a class="btn btn-primary btn-xl rounded-pill mt-5" id="editDetails">Edit your account details</a>
-            <a class="btn btn-primary btn-xl rounded-pill mt-5" id="changePassword">Change password</a>
+            <a href="/account/edit" class="btn btn-primary btn-xl rounded-pill mt-5" id="editDetails">Edit your account details</a>
+            <a href="/account/ch_pass" class="btn btn-primary btn-xl rounded-pill mt-5" id="changePassword">Change password</a>
         </div>
         <?php endif; ?>
     </div>

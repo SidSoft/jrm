@@ -9,19 +9,22 @@ class Router {
 	public function __construct() {
 
 		$routesPath = ROOT . '/config/routes.php';
-		$this->routes = include($routesPath);
+		$this->routes = include($routesPath); //load routing rules
 	}
 
 	/*
 	 * Return request string
-	 * @return string
 	 */
-	private function getURI() {
+	private function getURI(): string {
 		if (!empty($_SERVER['REQUEST_URI'])) {
 			return trim($_SERVER['REQUEST_URI'], '/');
 		}
+		return false;
 	}
 
+	/*
+	 * Handles requests and sends control to the corresponding Controller Action
+	 */
 	public function run() {
 		// Get query string
 		$uri = $this->getURI();
@@ -52,7 +55,6 @@ class Router {
 			}
 
 		}
-
 		if (!$pageExist) {
 			$pageTitle = 'Page Not Found';
 			require_once(ROOT . '/views/site/404.php');
