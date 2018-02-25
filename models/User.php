@@ -32,7 +32,7 @@ class User {
 
 		$sql = "UPDATE `user` SET `password` = :password WHERE `id` = :id";
 
-		$password = md5($password);
+		$password = password_hash($password, PASSWORD_DEFAULT);
 		$result = $db->prepare($sql);
 		$result->bindParam(':password', $password, \PDO::PARAM_STR);
 		$result->bindParam(':id', $userId, \PDO::PARAM_STR);
@@ -47,14 +47,16 @@ class User {
 
 		$db = Db::getConnection();
 
-		$sql = "SELECT COUNT(*) FROM `user` WHERE `id` = :id AND `password` = :password";
+		$sql = "SELECT * FROM `user` WHERE `id` = :id";
 
-		$password = md5($password);
 		$statement = $db->prepare($sql);
 		$statement->bindParam(':id', $userId, \PDO::PARAM_STR);
-		$statement->bindParam(':password', $password, \PDO::PARAM_STR);
+
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		$statement->execute();
-		if ($statement->fetchColumn()) return true;
+
+		$user = $statement->fetch();
+		if ($user && password_verify($password, $user['password'])) return true;
 		return false;
 	}
 
@@ -70,7 +72,7 @@ class User {
 				VALUES (:first_name, :last_name, :email, :password, :role, :confirmation)";
 
 		$confirmation = "";
-		$password = md5($password);
+		$password = password_hash($password, PASSWORD_DEFAULT);
 		$statement = $db->prepare($sql);
 		$statement->bindParam(':first_name', $first_name, \PDO::PARAM_STR);
 		$statement->bindParam(':last_name', $last_name, \PDO::PARAM_STR);
@@ -85,55 +87,6 @@ class User {
 			$last_id = 0;
 		}
 		return $last_id;
-	}
-
-	/*
-	 * Name field validation
-	 * Returns current error if any
-	 */
-	public static function checkName(string $name): string {
-
-		 if (!$name) $error = "This field is required";
-		 elseif (strlen($name) < 2) $error = "This field must be minimum 2 characters long";
-		 else $error = "";
-		 return $error;
-	}
-
-	/*
-	 * Email field validation
-	 * Check email uniqueness
-	 * Returns current error if any
-	 */
-	public static function checkEmail(string $email): string {
-
-		if (!$email) $error = "This field is required";
-		elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $error = "Email must be valid";
-		elseif (self::checkEmailExists($email)) $error = "This email already registered";
-		else $error = "";
-		return $error;
-	}
-
-	/*
-	 * Password field validation
-	 * Returns current error if any
-	 */
-	public static function checkPassword(string $password): string {
-
-		if (!$password) $error = "This field is required";
-		elseif (strlen($password) < 6) $error = "This field must be minimum 6 characters long";
-		else $error = "";
-		return $error;
-	}
-
-	/*
-	 * Check if confirmation password matches main password
-	 * Returns current error if any
-	 */
-	public static function checkPasswordConfirmation(string $password, string $password_confirmation): string {
-
-		if ($password != $password_confirmation) $error = "Password does't match the confirmation password";
-		else $error = "";
-		return $error;
 	}
 
 	/*
@@ -160,18 +113,16 @@ class User {
 
 		$db = Db::getConnection();
 
-		$sql = "SELECT * FROM `user` WHERE email = :email AND password = :password";
+		$sql = "SELECT * FROM `user` WHERE email = :email";
 
 		$statement = $db->prepare($sql);
-		$password = md5($password);
 		$statement->bindParam(':email', $email, \PDO::PARAM_STR);
-		$statement->bindParam(':password', $password, \PDO::PARAM_STR);
 
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		$statement->execute();
 
 		$user = $statement->fetch();
-		if ($user) {
+		if ($user && password_verify($password, $user['password'])) {
 			return $user['id'];
 		}
 		return false;

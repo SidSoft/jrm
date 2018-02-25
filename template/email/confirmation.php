@@ -17,7 +17,7 @@ return '
                     <tr style="vertical-align: top; padding: 0;">
                       <td style="vertical-align: top; text-align: left; padding: 0;" align="left" valign="top">
                         <p style="margin: 20px 0;">Thanks for signing up with JustRegMe! You must follow this link to activate your account:</p>
-						<p style="margin: 20px 0;"><a href="http://jrm.local/account/accept/' . $confirmation . '" style="color: #6E5BAA;">http://jrm.local/account/accept/' . $confirmation . '</a>
+						<p style="margin: 20px 0;">http://jrm.local/account/accept/' . $confirmation. '" style="color: #6E5BAA;">http://jrm.local/account/accept/' . $confirmation . '</a>
 						<p style="margin: 20px 0;">Have fun, and don\'t hesitate to contact us with your feedback.</p>
                         <p style="margin: 20px 0;">
                           The JustRegMe Team<br />

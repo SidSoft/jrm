@@ -2,6 +2,7 @@
 
 namespace controllers;
 
+use components\Validator;
 use models\User;
 
 class AccountController {
@@ -42,8 +43,8 @@ class AccountController {
 
 			$errors = array();
 
-			if (User::checkName($first_name)) $errors['first_name'] = User::checkName($first_name);
-			if (User::checkName($last_name)) $errors['last_name'] = User::checkName($last_name);
+			if (Validator::checkName($first_name)) $errors['first_name'] = Validator::checkName($first_name);
+			if (Validator::checkName($last_name)) $errors['last_name'] = Validator::checkName($last_name);
 
 			if (empty($errors)) {
 				$result = User::edit($userId, $first_name, $last_name);
@@ -75,9 +76,9 @@ class AccountController {
 			$errors = array();
 
 			if (User::passwordCheck($userId, $old_password)) {
-				if (User::checkPassword($password)) $errors['password'] = User::checkPassword($password);
-				if (User::checkPasswordConfirmation($password, $password_confirmation)) $errors['password_confirmation'] =
-					User::checkPasswordConfirmation($password, $password_confirmation);
+				if (Validator::checkPassword($password)) $errors['password'] = Validator::checkPassword($password);
+				if (Validator::checkPasswordConfirmation($password, $password_confirmation)) $errors['password_confirmation'] =
+					Validator::checkPasswordConfirmation($password, $password_confirmation);
 			} else $errors['old_password'] = "Wrong old password";
 
 			if (empty($errors)) {
