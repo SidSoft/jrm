@@ -43,8 +43,8 @@ class AccountController {
 
 			$errors = array();
 
-			if (Validator::checkName($first_name)) $errors['first_name'] = Validator::checkName($first_name);
-			if (Validator::checkName($last_name)) $errors['last_name'] = Validator::checkName($last_name);
+			if ($error = Validator::checkName($first_name)) $errors['first_name'] = $error;
+			if ($error = Validator::checkName($last_name)) $errors['last_name'] = $error;
 
 			if (empty($errors)) {
 				$result = User::edit($userId, $first_name, $last_name);

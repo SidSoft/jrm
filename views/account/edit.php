@@ -11,7 +11,7 @@
                             <div class="panel-body">
                                 <form role="form" action="#" method="post">
                                     <div class="form-group">
-                                        <input type="text" pattern=".{2,}" required title="2 characters minimum" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name" value="<?= $first_name; ?>">
+                                        <input type="text" pattern=".{2,}" required title="2 characters minimum" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name" value="<?php echo htmlentities(htmlentities($first_name),ENT_COMPAT, 'UTF-8'); ?>">
 	                                    <?php if (isset($errors['first_name']) && $errors['first_name']): ?>
                                             <span class="error"><?= $errors['first_name']; ?></span>
 	                                    <?php endif; ?>

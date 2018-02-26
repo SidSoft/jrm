@@ -15,11 +15,15 @@ class Validator {
 	 * Name field validation
 	 * Returns current error if any
 	 */
-	public static function checkName(string $name): string {
+	public static function checkName(&$name): string {
 
 		if (!$name) $error = "This field is required";
 		elseif (strlen($name) < 2) $error = "This field must be minimum 2 characters long";
 		else $error = "";
+		if (!(preg_match("/^([a-z0-9]*)$/i", $name))) {
+		$name = preg_replace("/[^a-z0-9]/i", "", $name);
+		$error = "Invalid characters were deleted.<br> Check if your name is correct";
+		}
 		return $error;
 	}
 
