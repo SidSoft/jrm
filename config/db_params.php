@@ -1,5 +1,5 @@
 <?php
 
 return array(
-	'db_name' => 'jrm.sqlite3',
+	'db_name' => 'jrm.sqlite',
 );
