@@ -16,7 +16,7 @@ class UserController {
 	/*
 	 * Manages registration page
 	 */
-	public function actionRegister(): bool {
+	public function actionRegister() {
 
 		$first_name = "";
 		$last_name = "";
@@ -60,7 +60,7 @@ class UserController {
 	/*
 	 * Manages login procedure
 	 */
-	public static function actionLogin():bool {
+	public static function actionLogin() {
 
 		$email = "";
 		$password = "";

@@ -15,7 +15,7 @@ class Validator {
 	 * Name field validation
 	 * Returns current error if any
 	 */
-	public static function checkName(&$name): string {
+	public static function checkName(&$name) {
 
 		if (!$name) $error = "This field is required";
 		elseif (strlen($name) < 2) $error = "This field must be minimum 2 characters long";
@@ -32,7 +32,7 @@ class Validator {
 	 * Check email uniqueness
 	 * Returns current error if any
 	 */
-	public static function checkEmail(string $email): string {
+	public static function checkEmail($email) {
 
 		if (!$email) $error = "This field is required";
 		elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $error = "Email must be valid";
@@ -45,7 +45,7 @@ class Validator {
 	 * Check if entered email already used for registration
 	 * Returns TRUE if entered email already exists
 	 */
-	public static function checkEmailExists(string $email): bool {
+	public static function checkEmailExists($email) {
 
 		$db = Db::getConnection();
 
@@ -62,7 +62,7 @@ class Validator {
 	 * Password field validation
 	 * Returns current error if any
 	 */
-	public static function checkPassword(string $password): string {
+	public static function checkPassword($password) {
 
 		if (!$password) $error = "This field is required";
 		elseif (strlen($password) < 6) $error = "This field must be minimum 6 characters long";
@@ -74,7 +74,7 @@ class Validator {
 	 * Check if confirmation password matches main password
 	 * Returns current error if any
 	 */
-	public static function checkPasswordConfirmation(string $password, string $password_confirmation): string {
+	public static function checkPasswordConfirmation($password, $password_confirmation) {
 
 		if ($password != $password_confirmation) $error = "Password does't match the confirmation password";
 		else $error = "";

@@ -7,7 +7,7 @@ class Db {
 	/*
 	 * DB initializations
 	 */
-	public static function getConnection(): object {
+	public static function getConnection(){
 		$paramsPath = ROOT . '/config/db_params.php';
 		$dbParams = include($paramsPath);
 

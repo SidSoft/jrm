@@ -10,7 +10,7 @@ class AccountController {
 	/*
 	 * Manages main page of User's personal aria
 	 */
-	public function actionIndex(): bool {
+	public function actionIndex() {
 
 		$userId = User::checkLogged();
 		$user = User::getUserById($userId);
@@ -29,7 +29,7 @@ class AccountController {
 	/*
 	 * Manages User's data edit page
 	 */
-	public function actionEdit(): bool {
+	public function actionEdit() {
 
 		$userId = User::checkLogged();
 		$user = User::getUserById($userId);
@@ -109,7 +109,7 @@ class AccountController {
 	/*
 	 * Manages email confirmation procedure
 	 */
-	public function actionAccept(string $confirmation) {
+	public function actionAccept($confirmation) {
 
 		User::confirmEmail($confirmation);
 	}

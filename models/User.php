@@ -9,7 +9,7 @@ class User {
 	/*
 	 * Edit user details
 	 */
-	public static function edit(int $userId, string $first_name, string $last_name): bool {
+	public static function edit($userId, $first_name, $last_name) {
 
 		$db = Db::getConnection();
 
@@ -26,7 +26,7 @@ class User {
 	/*
 	 * Change User password
 	 */
-	public static function passwordChange (int $userId, string $password): bool {
+	public static function passwordChange ($userId, $password) {
 
 		$db = Db::getConnection();
 
@@ -43,7 +43,7 @@ class User {
 	/*
 	 * Check if password corresponds UserID
 	 */
-	public static function passwordCheck(int $userId, string $password): bool {
+	public static function passwordCheck($userId, $password) {
 
 		$db = Db::getConnection();
 
@@ -64,7 +64,7 @@ class User {
 	 * User registration
 	 * Returns ID of registered user
 	 */
-	public static function register(string $first_name, string $last_name, string $email, string $password, int $role = 0): int {
+	public static function register($first_name, $last_name, $email, $password, $role = 0) {
 
 		$db = Db::getConnection();
 
@@ -93,7 +93,7 @@ class User {
 	 * Check if entered email already used for registration
 	 * Returns TRUE if entered email already exists
 	 */
-	public static function checkEmailExists(string $email): bool {
+	public static function checkEmailExists($email) {
 
 		$db = Db::getConnection();
 
@@ -109,7 +109,7 @@ class User {
 	 * Check if user with entered email and password exists
 	 * Returns UserID or FALSE
 	 */
-	public static function checkUserData(string $email, string $password) {
+	public static function checkUserData($email, $password) {
 
 		$db = Db::getConnection();
 
@@ -131,7 +131,7 @@ class User {
 	/*
 	 * Authentication
 	 */
-	public static function auth(int $userId) {
+	public static function auth($userId) {
 
 		$_SESSION['user'] = $userId;
 	}
@@ -150,7 +150,7 @@ class User {
 	 * Check if user is logged
 	 * Returns UserID or redirect on login page
 	 */
-	public static function checkLogged(): int {
+	public static function checkLogged() {
 
 		if (isset($_SESSION['user'])) {
 			return $_SESSION['user'];
@@ -162,7 +162,7 @@ class User {
 	/*
 	 * Returns User data
 	 */
-	public static function getUserById(int $userId): iterable {
+	public static function getUserById($userId) {
 
 		if ($userId) {
 			$db = Db::getConnection();
@@ -182,7 +182,7 @@ class User {
 	/*
 	 * Returns User name string
 	 */
-	public static function getUserName(int $id): string {
+	public static function getUserName($id) {
 
 		$user = self::getUserById($id);
 		return "{$user['first_name']} {$user['last_name']}";
@@ -192,7 +192,7 @@ class User {
 	/*
 	 * Send email
 	 */
-	public static function sendEmail(int $userId, string $subject, string $body, string $type = "html"): bool {
+	public static function sendEmail($userId, $subject, $body, $type = "html") {
 
 		$user = self::getUserById($userId);
 		$to = $user['email'];
@@ -207,7 +207,7 @@ class User {
 	/*
 	 * Generates new Confirmation code and stores it in DB
 	 */
-	public static function generateConfirmationCode(int $userId): string {
+	public static function generateConfirmationCode($userId) {
 
 		$confirmation = bin2hex(random_bytes(16));
 
@@ -227,7 +227,7 @@ class User {
 	/*
 	 * Registered user's email confirmation.
 	 */
-	public static function confirmEmail(string $confirmation) {
+	public static function confirmEmail($confirmation) {
 
 		$db = Db::getConnection();
 
