@@ -1,3 +1,4 @@
 .idea/
 components/Logger.php
 controllers/TestController.php
+trivia/
